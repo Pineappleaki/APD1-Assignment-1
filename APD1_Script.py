@@ -283,7 +283,7 @@ plot_labels = ['Weekly Price & TX Volume', 'Date', 'Price (USD)',
           'Active Addresses']
 asset = ['BTC', 'ETH']
 
-_plt = plotTimeSeries(data, 'price(USD)', 'adjustedTxVolume(USD)', plot_labels, 
+plotTimeSeries(data, 'price(USD)', 'adjustedTxVolume(USD)', plot_labels, 
                save_file=(True), produce_summary=(True))
 
 plotTimeSeries(data, 'price(USD)', 'activeAddresses', plot_labels, 
