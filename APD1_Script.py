@@ -107,7 +107,8 @@ def plotTimeSeries(data, y1, y2,
     try:
         gen_title, x_label, y1_label, y2_label = labels
     except:
-        print(f"{Fore.RED + Style.BRIGHT}ERROR:{Fore.RESET} Labels is missing {(4 - len(labels))} parameters")
+        print(f"{Fore.RED + Style.BRIGHT}ERROR:{Fore.RESET} Labels is missing",
+              f"{(4 - len(labels))} parameters")
         print(f'*** {Fore.YELLOW + Style.BRIGHT}ENDING:{Fore.RESET} plotTimeSeries ***\n')
         return
     color_a, color_b = color_set
@@ -131,25 +132,28 @@ def plotTimeSeries(data, y1, y2,
         ax1.grid(True)
         ax1.fill_between(df.index, df[y1], alpha=0.25)
 
-        ax1.plot(df.index, df[y1], label=y1_label)
+        _plt = ax1.plot(df.index, df[y1])
 
         ax2 = ax1.twinx()
         ax2.set_ylabel(y2_label)
 
-        ax2.plot(df.index, df[y2], color=color_set[1])
+        _plt2 = ax2.plot(df.index, df[y2], color=color_set[1])
 
+        plt.legend([_plt[0], _plt2[0]], [y1_label, y2_label])
         plt.show()
 
         if save_file == True:
             file_name = (f'./plots/{title}_{current_date}.png')
-            print(f'{Fore.MAGENTA + Style.BRIGHT}SAVING:{Fore.RESET} {file_name}')
+            print(f'{Fore.MAGENTA + Style.BRIGHT}SAVING:{Fore.RESET} ',
+                  f'{file_name}')
             fig.savefig((file_name),
                         format='png',
                         dpi=120,
                         bbox_inches='tight')
 
         if produce_summary == True:
-            print(f'\nProducing Summary for {Fore.YELLOW + Style.BRIGHT}{asset_set[itn-1]}:{Fore.RESET}\n')
+            print(f'\nProducing Summary for {Fore.YELLOW + Style.BRIGHT}',
+                  f'{asset_set[itn-1]}:{Fore.RESET}\n')
             all_features = [y1, y2]
             total_summary = []
             # Basic summary
@@ -160,18 +164,22 @@ def plotTimeSeries(data, y1, y2,
                 summary.append(np.mean(df[feature]))
 
                 total_summary.append(summary)
-            feature_df = pd.DataFrame(total_summary, columns=(['Maximum', 'Minimum', 'Mean']),
+            feature_df = pd.DataFrame(total_summary, 
+                                      columns=(['Maximum', 'Minimum', 'Mean']),
                                       index=(all_features))
             feature_df = feature_df.transpose()
 
             spearman = stats.spearmanr(df[y1], df[y2])
             print(feature_df)
             print('\nSpearman R Coefficient:\n',
-                  f'{Fore.BLUE + Style.BRIGHT}Correlation:{Fore.RESET} {spearman[0]}\n',
-                  f'{Fore.BLUE + Style.BRIGHT}P-Value:{Fore.RESET} {spearman[1]}\n')
+                  f'{Fore.BLUE + Style.BRIGHT}Correlation:{Fore.RESET} ',
+                  f'{spearman[0]:.4f}\n',
+                  f'{Fore.BLUE + Style.BRIGHT}P-Value:{Fore.RESET} ',
+                  f'{spearman[1]}\n')
 
-    print(f'*** {Fore.YELLOW + Style.BRIGHT}ENDING:{Fore.RESET} plotTimeSeries ***\n')
-    return
+    print(f'*** {Fore.YELLOW + Style.BRIGHT}ENDING:{Fore.RESET} ',
+          'plotTimeSeries ***\n')
+    return _plt
 
 
 def plotScatter(data, y1, y2='',
@@ -179,7 +187,8 @@ def plotScatter(data, y1, y2='',
                 color_set=['#2077b4', '#f38043'],
                 save_file=False,
                 stats_test=True):
-    print(f'\n*** {Fore.YELLOW + Style.BRIGHT}STARTING:{Fore.RESET} plotScatter ***\n')
+    print(f'\n*** {Fore.YELLOW + Style.BRIGHT}STARTING:{Fore.RESET} ',
+          'plotScatter ***\n')
 
     current_date = date.today().strftime('%d-%m-%Y')
     # Making inputs usable depnding on their value
@@ -212,7 +221,8 @@ def plotScatter(data, y1, y2='',
     # Plotting the data:
     plt.figure()
     scatter = sns.regplot(x=df_1[y1], y=df_2[y2],
-                          scatter_kws={"color": color_a}, line_kws={"color": color_b})
+                          scatter_kws={"color": color_a}, 
+                          line_kws={"color": color_b})
     if plot_labels == True:
         plt.title(title)
         plt.xlabel(f'{a1} {y1}')
@@ -232,14 +242,17 @@ def plotScatter(data, y1, y2='',
         spearman = stats.spearmanr(df_1[y1], df_2[y2])
         print(title)
         print('Spearman R Coefficient:\n',
-              f'{Fore.BLUE + Style.BRIGHT}Correlation:{Fore.RESET} {spearman[0]}\n',
+              f'{Fore.BLUE + Style.BRIGHT}Correlation:{Fore.RESET} ',
+              f'{spearman[0]:.4f}\n',
               f'{Fore.BLUE + Style.BRIGHT}P-Value:{Fore.RESET} {spearman[1]}')
         ks2 = stats.ks_2samp(df_1[y1], df_2[y2])
         print('KS2 Test:\n',
-              f'{Fore.BLUE + Style.BRIGHT}Statistic:{Fore.RESET} {ks2[0]}\n',
+              f'{Fore.BLUE + Style.BRIGHT}Statistic:{Fore.RESET} ',
+              f'{ks2[0]:.4f}\n',
               f'{Fore.BLUE + Style.BRIGHT}P-Value:{Fore.RESET} {ks2[1]}\n')
 
-    print(f'*** {Fore.YELLOW + Style.BRIGHT}ENDING:{Fore.RESET} plotScatter ***\n')
+    print(f'*** {Fore.YELLOW + Style.BRIGHT}ENDING:{Fore.RESET} ',
+          'plotScatter ***\n')
     return
 
 # First we need to retrieve the files we will be working with
@@ -266,11 +279,20 @@ data1 = btc_weekly
 data2 = eth_weekly
 
 data = [data1, data2]
-plot_labels = ['Weekly Price & TX Count', 'Date', 'Price (USD)',
-          'TX Count']
+plot_labels = ['Weekly Price & TX Volume', 'Date', 'Price (USD)',
+          'Active Addresses']
 asset = ['BTC', 'ETH']
 
-plotTimeSeries(data, 'price(USD)', 'txCount', plot_labels)
+_plt = plotTimeSeries(data, 'price(USD)', 'adjustedTxVolume(USD)', plot_labels, 
+               save_file=(True), produce_summary=(True))
 
-plotScatter(data,'price(USD)','price(USD)', assets = ['BTC', 'ETH'], save_file=(True))
-plotScatter(data2,'price(USD)','activeAddresses', assets = 'ETH', save_file=(True))
+plotTimeSeries(data, 'price(USD)', 'activeAddresses', plot_labels, 
+               save_file=(True), produce_summary=(True))
+
+plotScatter(data2,'price(USD)','activeAddresses', assets = 'ETH', 
+            save_file=(True))
+
+plotScatter(data,'price(USD)','price(USD)', assets = ['BTC', 'ETH'], 
+            save_file=(True))
+
+
