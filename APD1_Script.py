@@ -8,6 +8,7 @@ from scipy import stats
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 
@@ -173,6 +174,74 @@ def plotTimeSeries(data, y1, y2,
     return
 
 
+def plotScatter(data, y1, y2='',
+                assets='',
+                color_set=['#2077b4', '#f38043'],
+                save_file=False,
+                stats_test=True):
+    print(f'\n*** {Fore.YELLOW + Style.BRIGHT}STARTING:{Fore.RESET} plotScatter ***\n')
+
+    current_date = date.today().strftime('%d-%m-%Y')
+    # Making inputs usable depnding on their value
+    if (y2 == '') == True:
+        y2 = y1
+
+    if ((isinstance(data, list)) == True):
+        df_1, df_2 = data[0], data[1]
+    else:
+        df_1, df_2 = data, data
+        if y1 == y2:
+            print(f'{Fore.MAGENTA + Style.BRIGHT}WARNING:{Fore.RESET}',
+                  f"You are plotting '{y1}' against it's self.")
+
+    if assets != '':
+        plot_labels = True
+        if ((isinstance(assets, list)) == True):
+            a1, a2 = assets[0], assets[1]
+            pass
+        else:
+            a1 = assets
+            a2 = a1
+            pass
+    else:
+        plot_labels = False
+
+    color_a, color_b = color_set
+    title = f'{a1}: {y1} vs {a2}: {y2}'
+
+    # Plotting the data:
+    plt.figure()
+    scatter = sns.regplot(x=df_1[y1], y=df_2[y2],
+                          scatter_kws={"color": color_a}, line_kws={"color": color_b})
+    if plot_labels == True:
+        plt.title(title)
+        plt.xlabel(f'{a1} {y1}')
+        plt.ylabel(f'{a2} {y2}')
+    plt.show()
+
+    if save_file == True:
+        file_name = (f'./plots/{title}_{current_date}.png')
+        print(f'{Fore.MAGENTA + Style.BRIGHT}SAVING:{Fore.RESET} {file_name}')
+        fig = scatter.get_figure()
+        fig.savefig((file_name),
+                    format='png',
+                    dpi=120,
+                    bbox_inches='tight')
+
+    if stats_test == True:
+        spearman = stats.spearmanr(df_1[y1], df_2[y2])
+        print(title)
+        print('Spearman R Coefficient:\n',
+              f'{Fore.BLUE + Style.BRIGHT}Correlation:{Fore.RESET} {spearman[0]}\n',
+              f'{Fore.BLUE + Style.BRIGHT}P-Value:{Fore.RESET} {spearman[1]}')
+        ks2 = stats.ks_2samp(df_1[y1], df_2[y2])
+        print('KS2 Test:\n',
+              f'{Fore.BLUE + Style.BRIGHT}Statistic:{Fore.RESET} {ks2[0]}\n',
+              f'{Fore.BLUE + Style.BRIGHT}P-Value:{Fore.RESET} {ks2[1]}\n')
+
+    print(f'*** {Fore.YELLOW + Style.BRIGHT}ENDING:{Fore.RESET} plotScatter ***\n')
+    return
+
 # First we need to retrieve the files we will be working with
 btc_file = './data/bitcoin.csv'
 eth_file = './data/ethereum.csv'
@@ -202,3 +271,6 @@ plot_labels = ['Weekly Price & TX Count', 'Date', 'Price (USD)',
 asset = ['BTC', 'ETH']
 
 plotTimeSeries(data, 'price(USD)', 'txCount', plot_labels)
+
+plotScatter(data,'price(USD)','price(USD)', assets = ['BTC', 'ETH'], save_file=(True))
+plotScatter(data2,'price(USD)','activeAddresses', assets = 'ETH', save_file=(True))
