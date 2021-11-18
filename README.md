@@ -3,6 +3,7 @@
 
 This repo is for the submission of 
 Iniaki Boudiaf || MSc Data Science; Applied Data Science 1,
+
                || Assignment 1
 _______________________________________________________________
 
@@ -15,11 +16,11 @@ From this data i used the bitcoin.csv and ethereum.csv files.
 
 Modules used in this assignment:
 
-Pandas
-Numpy
-Scipy
-Seaborn
-Colorama
+Pandas,
+Numpy,
+Scipy,
+Seaborn,
+Colorama,
 Matplotlib
 _______________________________________________________________
 *** Contact info ***
