@@ -9,6 +9,14 @@ _______________________________________________________________
 This program is designed to take in data and return plots and statistical summaries which will be presented in a clean, readable format
 
 _______________________________________________________________
+*** Notes ***
+
+Data obtained form: https://www.kaggle.com/amritpal333/crypto-mining-data 
+_______________________________________________________________
 *** Contact info ***
+
 Twitter // @madeup
+
 Email // fake_name@madeup.com
+
+
