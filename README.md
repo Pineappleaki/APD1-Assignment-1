@@ -10,8 +10,17 @@ This program is designed to take in data and return plots and statistical summar
 
 _______________________________________________________________
 *** Notes ***
-
 Data obtained form: https://www.kaggle.com/amritpal333/crypto-mining-data 
+From this data i used the bitcoin.csv and ethereum.csv files.
+
+Modules used in this assignment:
+
+Pandas
+Numpy
+Scipy
+Seaborn
+Colorama
+Matplotlib
 _______________________________________________________________
 *** Contact info ***
 
