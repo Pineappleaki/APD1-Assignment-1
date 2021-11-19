@@ -179,7 +179,7 @@ def plotTimeSeries(data, y1, y2,
 
     print(f'*** {Fore.YELLOW + Style.BRIGHT}ENDING:{Fore.RESET} ',
           'plotTimeSeries ***\n')
-    return _plt
+    return
 
 
 def plotScatter(data, y1, y2='',
