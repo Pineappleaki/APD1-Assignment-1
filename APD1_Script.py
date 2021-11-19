@@ -1,6 +1,7 @@
 """
 Data obtained form: https://www.kaggle.com/amritpal333/crypto-mining-data
-Analyse the transactions comprised on the blockchain and compare ethereum to bitcoin
+Analyse the transactions comprised on the blockchain and compare ethereum to
+bitcoin
 """
 from datetime import date
 from colorama import Fore, Style
@@ -10,6 +11,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+"""
+FUNCTIONS
+"""
 
 
 def matchDates(data, date):
@@ -66,7 +70,8 @@ def normalise(df):
         else:
             max_value = np.max(df[feature_name])
             min_value = np.max(df[feature_name])
-            result[feature_name] = (df[feature_name] - min_value) / (max_value - min_value)
+            result[feature_name] = ((df[feature_name] - min_value) /
+                                    (max_value - min_value))
     return result
 
 
@@ -102,14 +107,16 @@ def plotTimeSeries(data, y1, y2,
     Shows a plot for each respective element in 'data', with option to save
     graphics and produce a summary
     """
-    print(f'\n*** {Fore.YELLOW + Style.BRIGHT}STARTING:{Fore.RESET} plotTimeSeries ***')
+    print(f'\n*** {Fore.YELLOW + Style.BRIGHT}STARTING:{Fore.RESET}',
+          'plotTimeSeries ***')
     # Unpacking lists
     try:
         gen_title, x_label, y1_label, y2_label = labels
     except:
         print(f"{Fore.RED + Style.BRIGHT}ERROR:{Fore.RESET} Labels is missing",
               f"{(4 - len(labels))} parameters")
-        print(f'*** {Fore.YELLOW + Style.BRIGHT}ENDING:{Fore.RESET} plotTimeSeries ***\n')
+        print(f'*** {Fore.YELLOW + Style.BRIGHT}ENDING:{Fore.RESET}',
+              'plotTimeSeries ***\n')
         return
     color_a, color_b = color_set
 
@@ -142,7 +149,7 @@ def plotTimeSeries(data, y1, y2,
         plt.legend([_plt[0], _plt2[0]], [y1_label, y2_label])
         plt.show()
 
-        if save_file == True:
+        if save_file is True:
             file_name = (f'./plots/{title}_{current_date}.png')
             print(f'{Fore.MAGENTA + Style.BRIGHT}SAVING:{Fore.RESET} ',
                   f'{file_name}')
@@ -151,7 +158,7 @@ def plotTimeSeries(data, y1, y2,
                         dpi=120,
                         bbox_inches='tight')
 
-        if produce_summary == True:
+        if produce_summary is True:
             print(f'\nProducing Summary for {Fore.YELLOW + Style.BRIGHT}',
                   f'{asset_set[itn-1]}:{Fore.RESET}\n')
             all_features = [y1, y2]
@@ -164,7 +171,7 @@ def plotTimeSeries(data, y1, y2,
                 summary.append(np.mean(df[feature]))
 
                 total_summary.append(summary)
-            feature_df = pd.DataFrame(total_summary, 
+            feature_df = pd.DataFrame(total_summary,
                                       columns=(['Maximum', 'Minimum', 'Mean']),
                                       index=(all_features))
             feature_df = feature_df.transpose()
@@ -192,10 +199,10 @@ def plotScatter(data, y1, y2='',
 
     current_date = date.today().strftime('%d-%m-%Y')
     # Making inputs usable depnding on their value
-    if (y2 == '') == True:
+    if (y2 == '') is True:
         y2 = y1
 
-    if ((isinstance(data, list)) == True):
+    if ((isinstance(data, list)) is True):
         df_1, df_2 = data[0], data[1]
     else:
         df_1, df_2 = data, data
@@ -205,7 +212,7 @@ def plotScatter(data, y1, y2='',
 
     if assets != '':
         plot_labels = True
-        if ((isinstance(assets, list)) == True):
+        if ((isinstance(assets, list)) is True):
             a1, a2 = assets[0], assets[1]
             pass
         else:
@@ -221,15 +228,15 @@ def plotScatter(data, y1, y2='',
     # Plotting the data:
     plt.figure()
     scatter = sns.regplot(x=df_1[y1], y=df_2[y2],
-                          scatter_kws={"color": color_a}, 
+                          scatter_kws={"color": color_a},
                           line_kws={"color": color_b})
-    if plot_labels == True:
+    if plot_labels is True:
         plt.title(title)
         plt.xlabel(f'{a1} {y1}')
         plt.ylabel(f'{a2} {y2}')
     plt.show()
 
-    if save_file == True:
+    if save_file is True:
         file_name = (f'./plots/{title}_{current_date}.png')
         print(f'{Fore.MAGENTA + Style.BRIGHT}SAVING:{Fore.RESET} {file_name}')
         fig = scatter.get_figure()
@@ -238,7 +245,7 @@ def plotScatter(data, y1, y2='',
                     dpi=120,
                     bbox_inches='tight')
 
-    if stats_test == True:
+    if stats_test is True:
         spearman = stats.spearmanr(df_1[y1], df_2[y2])
         print(title)
         print('Spearman R Coefficient:\n',
@@ -264,16 +271,12 @@ btc = pd.read_csv(btc_file)
 eth = pd.read_csv(eth_file)
 
 dates = ['2016-08-07', '2018-08-07']
-data = matchDates([btc, eth],dates)
+data = matchDates([btc, eth], dates)
 btc, eth = data[0], data[1]
 
 # Obtaining weekly average.
 btc_weekly = btc.resample('W').mean()
 eth_weekly = eth.resample('W').mean()
-
-# Normalising data - No longer needed.
-#btc_norm = normalise(btc_weekly)
-#eth_norm = normalise(eth_weekly)
 
 data1 = btc_weekly
 data2 = eth_weekly
@@ -283,16 +286,15 @@ plot_labels = ['Weekly Price & TX Volume', 'Date', 'Price (USD)',
           'Active Addresses']
 asset = ['BTC', 'ETH']
 
-plotTimeSeries(data, 'price(USD)', 'adjustedTxVolume(USD)', plot_labels, 
-               save_file=(True), produce_summary=(True))
+plotTimeSeries(data, 'price(USD)', 'adjustedTxVolume(USD)', plot_labels,
+               save_file=(False), produce_summary=(True))
 
-plotTimeSeries(data, 'price(USD)', 'activeAddresses', plot_labels, 
-               save_file=(True), produce_summary=(True))
+plotTimeSeries(data, 'price(USD)', 'activeAddresses', plot_labels,
+               save_file=(False), produce_summary=(True))
 
-plotScatter(data2,'price(USD)','activeAddresses', assets = 'ETH', 
-            save_file=(True))
+plotScatter(data2, 'price(USD)', 'activeAddresses', assets = 'ETH',
+            save_file=(False))
 
-plotScatter(data,'price(USD)','price(USD)', assets = ['BTC', 'ETH'], 
-            save_file=(True))
-
+plotScatter(data, 'price(USD)', 'price(USD)', assets = ['BTC', 'ETH'],
+            save_file=(False))
 
